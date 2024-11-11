@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   css: [
@@ -41,5 +41,12 @@ export default defineNuxtConfig({
       '~/plugins/vue-final-modal.ts',
       '~/plugins/maska.ts'
   ],
+  router: {
+    base: '/Contact-Management/'
+  },
+  server: {
+    host: '0.0.0.0', // Позволяет доступ с внешнего интерфейса
+    port: 3000 // Убедитесь, что порт совпадает с тем, что вы используете
+  }
 
 })
