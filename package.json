@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "nuxt start",
-    "start:json-server": "json-server --watch db.json --port 3001"
+    "start:json-server": "json-server --watch db.json --host 0.0.0.0 --port 3001"
   },
   "dependencies": {
     "@nuxtjs/google-fonts": "^3.2.0",

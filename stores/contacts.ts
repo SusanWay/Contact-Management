@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import type { Contact } from '~/types'
+import { useRuntimeConfig } from "#app"
 
 export const useContactStore = defineStore('contacts', {
     state: () => ({
@@ -21,37 +22,51 @@ export const useContactStore = defineStore('contacts', {
                 ...contact,
             };
             try {
-                const response = await axios.post('http://localhost:3001/contacts', newContact)
+                const runtimeConfig = useRuntimeConfig()
+
+                const response = await axios.post(`${runtimeConfig.public.apiBase}contacts`, newContact)
 
                 this.contacts.push(response.data)
-                this.saveToLocalStorage()
             }
             catch (error) {
-                console.error("Ошибка при добавлении контакта на сервере:", error);
+                console.error("Ошибка при добавлении контакта на сервере:", error)
+                await this.updateData()
+            }
+            finally {
+                this.saveToLocalStorage()
             }
         },
         async editContact(updatedContact: Contact) {
             const index = this.contacts.findIndex(contact => contact.id === updatedContact.id)
             if (index !== -1) {
                 try {
-                    await axios.put(`http://localhost:3001/contacts/${updatedContact.id}`, updatedContact)
+                    const runtimeConfig = useRuntimeConfig()
+
+                    await axios.put(`${runtimeConfig.public.apiBase}contacts/${updatedContact.id}`, updatedContact)
 
                     this.contacts[index] = updatedContact
-                    this.saveToLocalStorage()
                 }
                 catch (error) {
                     console.error("Ошибка при обновлении контакта на сервере:", error)
+                    await this.updateData()
+                } finally {
+                    this.saveToLocalStorage()
                 }
             }
         },
         async deleteContact(id: number) {
             try {
-                await axios.delete(`http://localhost:3001/contacts/${id}`);
+                const runtimeConfig = useRuntimeConfig()
 
-                this.contacts = this.contacts.filter(contact => contact.id !== id);
-                this.saveToLocalStorage();
+                await axios.delete(`${runtimeConfig.public.apiBase}contacts/${id}`)
+
+                this.contacts = this.contacts.filter(contact => contact.id !== id)
+
             } catch (error) {
-                console.error("Ошибка при удалении контакта на сервере:", error);
+                console.error("Ошибка при удалении контакта на сервере:", error)
+                await this.updateData()
+            } finally {
+                this.saveToLocalStorage()
             }
         },
         async loadFromLocalStorage() {
@@ -61,8 +76,7 @@ export const useContactStore = defineStore('contacts', {
             }
             else {
                 try {
-                    const response = await axios.get('http://localhost:3001/contacts')
-                    this.contacts = response.data; // Сохраняем полученные контакты в состоянии
+                    await this.updateData()
                 }
                 catch (error) {
                     console.error("Ошибка при получении контактов:", error)
@@ -72,5 +86,11 @@ export const useContactStore = defineStore('contacts', {
         saveToLocalStorage() {
             localStorage.setItem('contacts', JSON.stringify(this.contacts))
         },
+        async updateData() {
+            const runtimeConfig = useRuntimeConfig()
+
+            const response = await axios.get(`${runtimeConfig.public.apiBase}contacts`)
+            this.contacts = response.data
+        }
     },
 });
