@@ -31,6 +31,7 @@ const isEnabled = computed(() => {
 })
 
 function closeForm() {
+  contactStore.clearSelectedContact()
 
   vfm.close('editContact')
 }

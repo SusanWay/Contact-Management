@@ -13,6 +13,9 @@ export const useContactStore = defineStore('contacts', {
         setSelectContact(selectedContact: Contact) {
             this.selectedContact = selectedContact
         },
+        clearSelectedContact() {
+            this.selectedContact = {} as Contact
+        },
         async addContact(contact: Omit<Contact, 'id'>) {
             const newContact = {
                 id: Date.now(), // Используем время в миллисекундах как уникальный ID
