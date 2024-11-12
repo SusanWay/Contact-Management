@@ -8,7 +8,7 @@ const vfm = useVfm()
 const contactStore = useContactStore()
 
 interface ContactForm {
-  id: number
+  id: number | string
   name: string
   phone: string
   email: string
@@ -31,14 +31,14 @@ const isEnabled = computed(() => {
 })
 
 function closeForm() {
-  contactStore.selectContact({})
 
   vfm.close('editContact')
 }
 function sendForm() {
   const contact = {...values}
 
-  console.log(contact)
+  console.log(123, contact)
+
   contactStore.editContact(contact)
 
   closeForm()
@@ -80,7 +80,7 @@ function getData() {
         <Button type="submit" :disabled="!isEnabled" class="text-black w-full bg-green-dark disabled:bg-gray disabled:text-white">
           Изменить даные
         </Button>
-        <Button @click="closeForm" class="text-white w-full bg-red">
+        <Button type="button" @click="closeForm" class="text-white w-full bg-red">
           Закрыть форму
         </Button>
       </div>

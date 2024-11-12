@@ -1,5 +1,6 @@
 // stores/contacts.ts
 import { defineStore } from 'pinia'
+import axios from 'axios'
 import type { Contact } from '~/types'
 import { generateContacts } from "~/utils"
 
@@ -9,35 +10,55 @@ export const useContactStore = defineStore('contacts', {
         selectedContact: {} as Contact
     }),
     actions: {
-        addContact(contact: Omit<Contact, 'id'>) {
+        setSelectContact(selectedContact: Contact) {
+            this.selectedContact = selectedContact
+        },
+        async addContact(contact: Omit<Contact, 'id'>) {
             const newContact = {
                 id: Date.now(), // Используем время в миллисекундах как уникальный ID
                 ...contact,
             };
-            this.contacts.push(newContact)
-            this.saveToLocalStorage()
+            try {
+                const response = await axios.post('http://localhost:3001/contacts', newContact)
+
+                this.contacts.push(response.data)
+                this.saveToLocalStorage()
+            }
+            catch (error) {
+                console.error("Ошибка при добавлении контакта на сервере:", error);
+            }
         },
-        selectContact(selectedContact: Contact) {
-            this.selectedContact = selectedContact
-        },
-        editContact(updatedContact: Contact) {
+        async editContact(updatedContact: Contact) {
             const index = this.contacts.findIndex(contact => contact.id === updatedContact.id)
             if (index !== -1) {
-                this.contacts[index] = updatedContact
-                this.saveToLocalStorage()
+                try {
+                    await axios.put(`http://localhost:3001/contacts/${updatedContact.id}`, updatedContact)
+
+                    this.contacts[index] = updatedContact
+                    this.saveToLocalStorage()
+                }
+                catch (error) {
+                    console.error("Ошибка при обновлении контакта на сервере:", error)
+                }
             }
         },
         deleteContact(id: number) {
             this.contacts = this.contacts.filter(contact => contact.id !== id)
             this.saveToLocalStorage()
         },
-        loadFromLocalStorage() {
+        async loadFromLocalStorage() {
             const contactsData = localStorage.getItem('contacts')
             if (contactsData) {
                 this.contacts = JSON.parse(contactsData);
             }
             else {
-                this.contacts = generateContacts()
+                try {
+                    const response = await axios.get('http://localhost:3001/contacts')
+                    this.contacts = response.data; // Сохраняем полученные контакты в состоянии
+                }
+                catch (error) {
+                    console.error("Ошибка при получении контактов:", error)
+                }
             }
         },
         saveToLocalStorage() {

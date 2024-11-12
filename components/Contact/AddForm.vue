@@ -68,7 +68,7 @@ function sendForm() {
         <Button type="submit" :disabled="!isEnabled" class="text-black w-full bg-green-dark disabled:bg-gray disabled:text-white">
           Отправить даные
         </Button>
-        <Button @click="closeForm" class="text-white w-full bg-red">
+        <Button type="button" @click="closeForm" class="text-white w-full bg-red">
           Закрыть форму
         </Button>
       </div>

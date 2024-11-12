@@ -2,6 +2,7 @@
 import {  useVfm } from 'vue-final-modal'
 import { useContactStore } from '~/stores/contacts'
 import { useSearchStore } from '~/stores/search'
+import type { Contact } from "~/types"
 
 
 const fvm = useVfm()
@@ -15,8 +16,8 @@ const sortedContacts = computed(()=>{
   )
 })
 
-function editContact(contact) {
-  contactStore.selectContact(contact)
+function editContact(contact: Contact) {
+  contactStore.setSelectContact(contact)
 
   fvm.open('editContact')
 }

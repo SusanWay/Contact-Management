@@ -13,7 +13,16 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-svgo-loader', '@nuxtjs/google-fonts', 'nuxt-swiper'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-svgo-loader',
+    '@nuxtjs/google-fonts',
+    'nuxt-swiper'],
+  plugins: [
+    '~/plugins/pinia.ts',
+    '~/plugins/vue-final-modal.ts',
+    '~/plugins/maska.ts'
+  ],
   svgoLoader: {
     svgoConfig: {
       plugins: [
@@ -35,14 +44,6 @@ export default defineNuxtConfig({
     families: {
       'Source Sans Pro': [300, 400, 600, 700, 800]
     }
-  },
-  plugins: [
-      '~/plugins/pinia.ts',
-      '~/plugins/vue-final-modal.ts',
-      '~/plugins/maska.ts'
-  ],
-  router: {
-    base: '/Contact-Management/'
   },
   server: {
     host: '0.0.0.0', // Позволяет доступ с внешнего интерфейса
