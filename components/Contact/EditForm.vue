@@ -3,6 +3,7 @@ import { VueFinalModal, useVfm } from 'vue-final-modal'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { useContactStore } from '~/stores/contacts'
+import { formatFormValues } from "~/utils"
 
 const vfm = useVfm()
 const contactStore = useContactStore()
@@ -36,9 +37,7 @@ function closeForm() {
   vfm.close('editContact')
 }
 function sendForm() {
-  const contact = {...values}
-
-  console.log(123, contact)
+  const contact = formatFormValues(values)
 
   contactStore.editContact(contact)
 
@@ -57,9 +56,17 @@ function getData() {
       @before-open="getData()"
   >
     <form @submit.prevent="sendForm">
-      <h1 class="text-center text-title-sm font-bold">
-        Редактировать контакт
-      </h1>
+      <div class="flex w-full content-center items-center justify-between md:inline-block">
+        <h1 class="text-center text-title-sm font-bold">
+          Редактировать контакт
+        </h1>
+        <Button type="button" class="border-0 block md:absolute md:right-6 md:top-6" @click="closeForm()">
+          <div class="relative flex h-6 w-6">
+            <span class="absolute top-[7px] h-0.5 w-full translate-y-1 rotate-45 bg-black" />
+            <span class="absolute bottom-[7px] h-0.5 w-full -translate-y-1 -rotate-45 bg-black" />
+          </div>
+        </Button>
+      </div>
       <div class="flex-col flex gap-2.5 mt-5">
         <InputModalText
             name="name"
@@ -77,12 +84,9 @@ function getData() {
             text="Телефон *"
         />
       </div>
-      <div class="flex gap-2.5 mt-5">
+      <div class="flex mt-5">
         <Button type="submit" :disabled="!isEnabled" class="text-black w-full bg-green-dark disabled:bg-gray disabled:text-white">
           Изменить даные
-        </Button>
-        <Button type="button" @click="closeForm" class="text-white w-full bg-red">
-          Закрыть форму
         </Button>
       </div>
     </form>

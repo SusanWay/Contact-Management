@@ -2,7 +2,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import type { Contact } from '~/types'
-import { generateContacts } from "~/utils"
 
 export const useContactStore = defineStore('contacts', {
     state: () => ({
@@ -18,7 +17,7 @@ export const useContactStore = defineStore('contacts', {
         },
         async addContact(contact: Omit<Contact, 'id'>) {
             const newContact = {
-                id: Date.now(), // Используем время в миллисекундах как уникальный ID
+                id: Date.now().toString(), // Используем время в миллисекундах как уникальный ID
                 ...contact,
             };
             try {
@@ -45,9 +44,15 @@ export const useContactStore = defineStore('contacts', {
                 }
             }
         },
-        deleteContact(id: number) {
-            this.contacts = this.contacts.filter(contact => contact.id !== id)
-            this.saveToLocalStorage()
+        async deleteContact(id: number) {
+            try {
+                await axios.delete(`http://localhost:3001/contacts/${id}`);
+
+                this.contacts = this.contacts.filter(contact => contact.id !== id);
+                this.saveToLocalStorage();
+            } catch (error) {
+                console.error("Ошибка при удалении контакта на сервере:", error);
+            }
         },
         async loadFromLocalStorage() {
             const contactsData = localStorage.getItem('contacts')

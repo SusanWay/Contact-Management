@@ -3,6 +3,7 @@ import { VueFinalModal, useVfm } from 'vue-final-modal'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { useContactStore } from '~/stores/contacts'
+import { formatFormValues } from "~/utils"
 
 const vfm = useVfm()
 const contactStore = useContactStore()
@@ -29,10 +30,9 @@ function closeForm() {
   vfm.close('addContact')
 }
 function sendForm() {
-  const contact = {...values}
+  const contact = formatFormValues(values)
 
   contactStore.addContact(contact)
-
   closeForm()
 }
 
@@ -44,9 +44,17 @@ function sendForm() {
       content-class="fixed inset-0 sm:rounded-3xl bg-green p-10 md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[640px] md:-translate-x-1/2 md:-translate-y-1/2"
   >
     <form @submit.prevent="sendForm">
-      <h1 class="text-center text-title-sm font-bold">
-        Добавить новый контакт
-      </h1>
+      <div class="flex w-full content-center items-center justify-between md:inline-block">
+        <h1 class="text-center text-title-sm font-bold">
+          Добавить новый контакт
+        </h1>
+        <Button type="button" class="border-0 block md:absolute md:right-6 md:top-6" @click="closeForm()">
+          <div class="relative flex h-6 w-6">
+            <span class="absolute top-[7px] h-0.5 w-full translate-y-1 rotate-45 bg-black" />
+            <span class="absolute bottom-[7px] h-0.5 w-full -translate-y-1 -rotate-45 bg-black" />
+          </div>
+        </Button>
+      </div>
       <div class="flex-col flex gap-2.5 mt-5">
         <InputModalText
             name="name"
@@ -64,12 +72,9 @@ function sendForm() {
             text="Телефон *"
         />
       </div>
-      <div class="flex gap-2.5 mt-5">
+      <div class="flex mt-5">
         <Button type="submit" :disabled="!isEnabled" class="text-black w-full bg-green-dark disabled:bg-gray disabled:text-white">
           Отправить даные
-        </Button>
-        <Button type="button" @click="closeForm" class="text-white w-full bg-red">
-          Закрыть форму
         </Button>
       </div>
     </form>

@@ -14,7 +14,7 @@ const component = computed(() => {
 </script>
 
 <template>
-  <component :disabled="props.disabled" class="p-2 border-white border rounded-[8px] cursor-pointer">
+  <component :is="component" :disabled="props.disabled" class="p-2 border-white border rounded-[8px] cursor-pointer">
     <div>
       <p class="text-base text-center select-none">
         <slot/>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Contact } from "~/types"
-
+import { unformatPhoneNumber } from "~/utils"
 defineProps<Contact>()
 const emit = defineEmits<{
   (e: 'deleteContact'): void,
@@ -9,7 +9,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="w-full bg-green p-4 rounded-xl flex flex-col md:flex-row md:justify-between">
+  <div class="w-full bg-green p-4 rounded-xl flex flex-row md:justify-between">
     <div class="w-full md:w-3/4">
       <p>
         <span class="text-gray">
@@ -27,15 +27,15 @@ const emit = defineEmits<{
         <span class="text-gray">
           Телефон:
         </span>
-        {{ phone }}
+        {{ unformatPhoneNumber(phone) }}
       </p>
     </div>
-    <div class="mt-4 md:mt-0 w-full md:w-1/4 flex-row md:flex-col flex gap-2">
-      <Button class="bg-yellow w-full" @click="emit('editContact')">
-        Редактировать
+    <div class="mt-4 md:mt-0 flex-row items-center md:flex-col flex gap-2">
+      <Button class="bg-yellow" @click="emit('editContact')">
+        <Icon name="edit" />
       </Button>
-      <Button class="bg-red w-full" @click="emit('deleteContact')">
-        Удалить
+      <Button class="bg-red " @click="emit('deleteContact')">
+        <Icon name="delete" class="text-white" />
       </Button>
     </div>
   </div>

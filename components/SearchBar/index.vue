@@ -28,15 +28,16 @@ const options = {
 </script>
 
 <template>
-  <div class="container mx-auto mt-8 border-b-2 pb-8 border-green-dark flex justify-center gap-5">
-    <input class="w-11/12 sm:w-3/4 rounded-xl px-4 py-2 focus:outline-none"
-           v-model="inputValue"
-           v-maska:[options]
-           placeholder="Поиск"
-           data-maska="A">
-    <Button class="hidden sm:block bg-green-dark text-white w-1/6">
-      Поиск
-    </Button>
+  <div class="container mx-auto mt-8 border-b-2 pb-8 border-green-dark flex justify-center">
+    <div class="w-11/12 relative">
+      <Icon name="search" class="absolute right-3 top-2 opacity-35" />
+      <input class="rounded-xl w-full px-4 py-2 focus:outline-none"
+             v-model="inputValue"
+             v-maska:[options]
+             placeholder="Поиск"
+             data-maska="A"
+      >
+    </div>
   </div>
 </template>
 
